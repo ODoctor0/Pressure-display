@@ -1,7 +1,7 @@
 #include <LiquidCrystal.h>
 
 float test;
-float conversor = 0.00083; //14 bits 0.00083 12 bits 0.00335 10 bits 0.01343
+float conversor = 0.00083; //14 bits 0.00083 resolution
 float interm;
 float pressBAR;
 int a;
