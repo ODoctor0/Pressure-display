@@ -1,0 +1,117 @@
+#include <LiquidCrystal.h>
+
+float test;
+float conversor = 0.00083; //14 bits 0.00083 12 bits 0.00335 10 bits 0.01343
+float interm;
+float pressBAR;
+int a;
+float fatorPSI = 14.50377;
+float pressPSI;
+float b;
+
+LiquidCrystal lcd_1(12, 11, 5, 4, 3, 2);
+
+
+void clearRow(byte rowToClear)
+{
+  lcd_1.setCursor(0, rowToClear);
+  lcd_1.print("             ");  
+}
+
+void PSI_print()
+{
+  	if(pressPSI < -10){ //PSI -10,00000
+        clearRow(0);            //This function just adjust
+		lcd_1.setCursor(0, 0);      //the decimal point
+		lcd_1.print(pressPSI,5);
+    	}
+    else if(pressPSI < 0){ //PSI -1,00000
+        clearRow(0);
+    	lcd_1.setCursor(1, 0);
+		lcd_1.print(pressPSI,5);
+    	}
+    else if(pressPSI < 10){ //PSI 1,00000
+        clearRow(0);
+      	lcd_1.setCursor(2,0);
+      	lcd_1.print(pressPSI,5);
+    	}
+    else if(pressPSI < 100){ //PSI 10,00000
+        clearRow(0);
+      	lcd_1.setCursor(1,0);
+      	lcd_1.print(pressPSI,5);
+    	}
+    else{ //PSI 100,00000
+        clearRow(0);
+      	lcd_1.setCursor(0,0);
+      	lcd_1.print(pressPSI,5);
+    	}
+}
+
+void BAR_print()
+{
+    if(pressBAR < 0)
+    {
+    	clearRow(1);              //This function just adjust
+		lcd_1.setCursor(1, 1);      //the decimal point
+    	lcd_1.print(pressBAR,5);
+    }
+    else
+    {
+      	clearRow(1);
+		lcd_1.setCursor(2, 1);
+    	lcd_1.print(pressBAR,5);
+  	}
+}
+
+void setup()
+{
+  while(a < 4){
+  lcd_1.begin(16, 2);
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Ligando.");
+  delay(200);
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Ligando..");
+  delay(200);
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("Ligando...");
+  delay(200);
+  a++;
+  }
+  clearRow(0);
+  clearRow(1);
+  lcd_1.setCursor(0, 0);
+  lcd_1.print("Modulo de press");
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("V 1.00");
+  delay(2000);
+  //analogReadResolution(14);
+  clearRow(0);
+  clearRow(1);
+}
+
+void loop()
+{
+  test = analogRead(A0);
+  if(test <= 3276){           //remove < 1V results, will probably remove
+    clearRow(0);
+  	clearRow(1);
+    lcd_1.setCursor(0, 0);
+    lcd_1.print("ERROR");
+  	lcd_1.setCursor(0, 1);
+    lcd_1.print("ERROR");
+  	}
+  else{
+    b = test-3276; //removing 0-1V
+	interm = b*conversor;              //bit*conversion rate to bar
+	pressBAR = interm-1;               //moving the 0 to -1
+	pressPSI = pressBAR*fatorPSI;      //converts bar to psi
+  	PSI_print();
+    BAR_print();
+ 	lcd_1.setCursor(13,0);
+  	lcd_1.print("PSI");
+  	lcd_1.setCursor(13,1);
+  	lcd_1.print("BAR");}
+	
+  delay(200);
+  }
