@@ -21,7 +21,7 @@ void clearRow(byte rowToClear)
 void PSI_print()
 {
   	if(pressPSI < -10){ //PSI -10,00000
-        clearRow(0);            //This function just adjust
+        clearRow(0);         		//This function just adjust
 		lcd_1.setCursor(0, 0);      //the decimal point
 		lcd_1.print(pressPSI,5);
     	}
@@ -51,7 +51,7 @@ void BAR_print()
 {
     if(pressBAR < 0)
     {
-    	clearRow(1);              //This function just adjust
+    	clearRow(1);              	//This function just adjust
 		lcd_1.setCursor(1, 1);      //the decimal point
     	lcd_1.print(pressBAR,5);
     }
@@ -65,9 +65,9 @@ void BAR_print()
 
 void setup()
 {
-  while(a < 4){
-  lcd_1.begin(16, 2);
-  lcd_1.setCursor(0, 1);
+  while(a < 4){				//This while loop is just there, doesnt do anything
+  lcd_1.begin(16, 2);		//It exists so to make it look fancy
+  lcd_1.setCursor(0, 1);	//reminds me a lot of the PS1 era loading screens
   lcd_1.print("Ligando.");
   delay(200);
   lcd_1.setCursor(0, 1);
@@ -93,8 +93,8 @@ void setup()
 void loop()
 {
   test = analogRead(A0);
-  if(test <= 3276){           //remove < 1V results, will probably remove
-    clearRow(0);
+  if(test <= 3276){           	//remove < 1V results, will probably remove
+    clearRow(0);				//this section. Probable breaking point, need to investigate
   	clearRow(1);
     lcd_1.setCursor(0, 0);
     lcd_1.print("ERROR");
